@@ -13,20 +13,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var taskManager *TodoList
+var taskManager *todoList
 
-type TodoList struct {
+type todoList struct {
 	Tasks  []models.Task `json:"tasks"`
 	NextId int           `json:"next_id"`
 }
 
-func New() {
-	taskManager = &TodoList{}
-}
-
 func LoadTasks(cmd *cobra.Command, args []string) {
 	file := config.TasksPath
-	taskManager = &TodoList{
+	taskManager = &todoList{
 		Tasks:  make([]models.Task, 0),
 		NextId: 1,
 	}
