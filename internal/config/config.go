@@ -1,20 +1,29 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"os"
+	"strconv"
+)
 
 var MaxTaskLength uint
 var TasksPath string
 
-func SetupConfig() {
-	v := viper.New()
-	v.SetConfigName("config")
-	v.SetConfigType("yaml")
-	v.AddConfigPath("./config")
-	v.SetDefault("TasksPath", "tasks.json")
-	v.SetDefault("MaxTaskLength", 200)
+func InitConfig() error {
+	maxTaskLengthStr, err := strconv.Atoi(envOrDefault("MAX_TASK_LENGTH", "200"))
+	if err != nil {
+		return err
+	}
 
-	v.ReadInConfig()
+	MaxTaskLength = uint(maxTaskLengthStr)
+	TasksPath = envOrDefault("TASKS_PATH", "tasks.json")
 
-	MaxTaskLength = v.GetUint("MaxTaskLength")
-	TasksPath = v.GetString("TasksPath")
+	return nil
+}
+
+func envOrDefault(varName string, defaultValue string) string {
+	value := os.Getenv(varName)
+	if value == "" {
+		value = defaultValue
+	}
+	return value
 }

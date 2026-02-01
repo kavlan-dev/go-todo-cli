@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
-	config.SetupConfig()
+	err := config.InitConfig()
+	if err != nil {
+		panic(err)
+	}
+
 	cmd.Execute()
 }
